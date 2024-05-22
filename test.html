@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Client</title>
+</head>
+<body>
+    <button id="btn">发送WebSocket消息</button>
+    <div id="content"></div>
+</body>
+<script>
+    var ws = new WebSocket("ws://127.0.0.1:8765");
+    
+    ws.onopen = function () {
+        console.log("WebSocket连接已打开");
+        // 可以在这里添加一些连接打开后的逻辑
+    };
+    
+    const content = document.getElementById("content");
+    const arr = [];
+    ws.onmessage = function (e) {
+        arr.push(e.data);
+        content.innerHTML = arr.join("<br>");
+    };
+    
+    ws.onerror = function (error) {
+        console.error("WebSocket错误:", error);
+    };
+    
+    ws.onclose = function () {
+        console.log("WebSocket连接已关闭");
+        // 可以在这里添加一些连接关闭后的逻辑
+    };
+    
+    var btn = document.getElementById("btn");
+    btn.onclick = function () {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send("hello");
+        } else {
+            console.log("WebSocket连接未打开，无法发送消息");
+        }
+    };
+</script>
+</html>
